@@ -1,0 +1,245 @@
+:root {
+    --bg: #12101b;
+    --surface: #1d1930;
+    --text: #f0eaff;
+    --text-dim: #b8afd1;
+    --copper: #b5652e;
+    --copper-bright: #e3a26d;
+    --gold: #d9b872;
+    --verified: #4fb6a6;
+    --border: #322a4d;
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Sora', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+}
+
+.page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 48px;
+}
+
+.brand {
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 0.02em;
+}
+
+.hero {
+    text-align: center;
+    padding: 40px 0 56px;
+    border-bottom: 1px solid var(--border);
+}
+
+.oracle-avatar {
+    width: 88px;
+    height: 88px;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.15;
+    margin: 0 0 12px;
+}
+
+.hero-sub {
+    color: var(--text-dim);
+    font-size: 16px;
+    max-width: 480px;
+    margin: 0 auto 32px;
+}
+
+.ask-form {
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.ask-label {
+    display: block;
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+}
+
+.ask-row {
+    display: flex;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 6px 6px 20px;
+}
+
+.ask-row input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    outline: none;
+}
+
+.ask-row input::placeholder {
+    color: var(--text-dim);
+}
+
+.ask-row button {
+    background: linear-gradient(135deg, var(--copper-bright), var(--copper));
+    color: #1a0f08;
+    border: none;
+    border-radius: 999px;
+    padding: 12px 22px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.ask-row button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ask-row button:not(:disabled):hover {
+    transform: translateY(-1px);
+}
+
+.ask-balance {
+    margin-top: 14px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+.ask-error {
+    margin-top: 14px;
+    color: #e08585;
+    font-size: 14px;
+}
+
+.ask-success {
+    margin-top: 14px;
+    color: var(--gold);
+    font-size: 14px;
+}
+
+.board {
+    padding-top: 40px;
+}
+
+.board-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.board-tabs button {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.board-tabs button.active {
+    border-color: var(--copper);
+    color: var(--text);
+    background: var(--surface);
+}
+
+.feed-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.feed-empty {
+    color: var(--text-dim);
+    text-align: center;
+    padding: 40px 0;
+}
+
+.answer-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 20px;
+}
+
+.answer-question {
+    font-family: var(--font-display);
+    font-size: 17px;
+    margin: 0 0 8px;
+}
+
+.answer-text {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 0 0 12px;
+}
+
+.answer-pending {
+    color: var(--text-dim);
+    font-style: italic;
+    margin: 0 0 12px;
+}
+
+.answer-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+}
+
+.answer-asker {
+    color: var(--text-dim);
+}
+
+.answer-verified {
+    color: var(--verified);
+}
+
+.answer-unverified {
+    color: var(--gold);
+}
+
+@media (max-width: 560px) {
+    .ask-row {
+        flex-direction: column;
+        border-radius: 20px;
+        padding: 14px;
+    }
+
+    .ask-row button {
+        width: 100%;
+    }
+}
