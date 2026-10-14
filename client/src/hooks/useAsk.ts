@@ -45,6 +45,7 @@ export function useAsk() {
       });
       await publicClient.waitForTransactionReceipt({ hash: askHash });
       setStatus('done');
+      setTimeout(() => setStatus('idle'), 8000);
     } catch (err) {
       setStatus('error');
       setError(err instanceof Error ? err.message : 'something went wrong');

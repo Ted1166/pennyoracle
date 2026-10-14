@@ -147,6 +147,17 @@ body {
     font-size: 14px;
 }
 
+.ask-counter {
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+}
+
+.ask-counter.over {
+    color: #e08585;
+}
+
 .board {
     padding-top: 40px;
 }

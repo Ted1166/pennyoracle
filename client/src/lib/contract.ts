@@ -20,3 +20,4 @@ export const usdcAbi = parseAbi([
 ]);
 
 export const QUESTION_PRICE = 10000n;
+export const MAX_QUESTION_BYTES = 400;

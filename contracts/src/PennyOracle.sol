@@ -14,6 +14,7 @@ interface IERC20 {
 contract PennyOracle {
     IERC20 public immutable USDC;
     uint256 public constant PRICE = 10_000;
+    uint256 public constant MAX_QUESTION_BYTES = 400;
 
     address public owner;
     address public oracle;
@@ -45,6 +46,7 @@ contract PennyOracle {
     error AlreadyFulfilled();
     error QuestionNotFound();
     error EmptyQuestion();
+    error QuestionTooLong();
     error PaymentFailed();
 
     modifier onlyOwner() {
@@ -65,6 +67,8 @@ contract PennyOracle {
 
     function ask(string calldata question) external returns (uint256 id) {
         if (bytes(question).length == 0) revert EmptyQuestion();
+        if (bytes(question).length > MAX_QUESTION_BYTES)
+            revert QuestionTooLong();
         if (!USDC.transferFrom(msg.sender, address(this), PRICE))
             revert PaymentFailed();
 

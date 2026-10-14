@@ -2,10 +2,14 @@ import { keccak256, toHex } from 'viem';
 import { publicClient, walletClient, pennyOracleAbi } from './chain';
 import { config } from './config';
 import { getOracleAnswer } from './oracle';
-import { insertAsked, markFulfilled } from './store';
+import { getById, insertAsked, markFulfilled } from './store';
 import { AskedEvent } from './types';
 
+const RECOVERY_INTERVAL_MS = 30_000;
+
 const processing = new Set<string>();
+const settled = new Set<string>();
+let recovering = false;
 
 export function startListener() {
   publicClient.watchContractEvent({
@@ -21,6 +25,59 @@ export function startListener() {
       }
     }
   });
+
+  runRecovery();
+  setInterval(runRecovery, RECOVERY_INTERVAL_MS);
+}
+
+async function runRecovery() {
+  if (recovering) return;
+  recovering = true;
+  try {
+    await recoverPending();
+  } catch (err) {
+    console.error('recovery failed', err);
+  } finally {
+    recovering = false;
+  }
+}
+
+async function recoverPending() {
+  const total = Number(
+    await publicClient.readContract({
+      address: config.contractAddress,
+      abi: pennyOracleAbi,
+      functionName: 'nextId'
+    })
+  );
+
+  for (let i = 0; i < total; i++) {
+    const id = String(i);
+    if (settled.has(id) || processing.has(id)) continue;
+
+    if (getById(id)?.fulfilled) {
+      settled.add(id);
+      continue;
+    }
+
+    const [asker, question, , fulfilled, askedAt] = await publicClient.readContract({
+      address: config.contractAddress,
+      abi: pennyOracleAbi,
+      functionName: 'getQuestion',
+      args: [BigInt(i)]
+    });
+
+    if (fulfilled) {
+      settled.add(id);
+      continue;
+    }
+
+    try {
+      await handleAsked({ id: BigInt(i), asker, question, askedAt });
+    } catch (err) {
+      console.error(`failed to recover question ${id}`, err);
+    }
+  }
 }
 
 async function handleAsked(args: AskedEvent) {
@@ -45,6 +102,7 @@ async function handleAsked(args: AskedEvent) {
     const block = await publicClient.getBlock({ blockNumber: receipt.blockNumber });
 
     markFulfilled(id, answer, answerHash, Number(block.timestamp));
+    settled.add(id);
   } finally {
     processing.delete(id);
   }

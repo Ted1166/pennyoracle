@@ -9,7 +9,7 @@ export function useWallet() {
     abi: usdcAbi,
     functionName: 'balanceOf',
     args: address ? [address] : undefined,
-    query: { enabled: Boolean(address) }
+    query: { enabled: Boolean(address), refetchInterval: 5000 }
   });
 
   return {

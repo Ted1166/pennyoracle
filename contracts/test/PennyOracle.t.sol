@@ -129,4 +129,16 @@ contract PennyOracleTest is Test {
         pennyOracle.setOracle(newOracle);
         assertEq(pennyOracle.oracle(), newOracle);
     }
+
+    function testAskRevertsOnTooLongQuestion() public {
+        vm.prank(asker);
+        vm.expectRevert(PennyOracle.QuestionTooLong.selector);
+        pennyOracle.ask(string(new bytes(401)));
+    }
+
+    function testAskAcceptsMaxLengthQuestion() public {
+        vm.prank(asker);
+        pennyOracle.ask(string(new bytes(400)));
+        assertEq(usdc.balanceOf(address(pennyOracle)), 10_000);
+    }
 }
